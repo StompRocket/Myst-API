@@ -12,13 +12,33 @@ def load_config ( ):
 	with open('config.json', 'r') as cfg:
 		config = cfg.read()
 		cfg.close()
-	print(config)
 	return json.loads(config)
+
+def write_config( config ):
+	with open('config.json', 'w+') as cfg:
+		cfg.write(json.dumps(config))
+		cfg.close()
+
+def choose_key ( config ):
+	key_len = len(config['keys'])
+	last_key = config['last-key']
+	if key_len > 1:
+		if last_key >= key_len:
+			config['last-key'] = 0
+			write_config()
+			return config['keys'][0]
+		else:
+			config['last-key'] = last_key + 1
+			return config['keys'][config['last-key']]
+	else:
+		return config['keys'][0]
 
 @get('/<lat>/<long>/forecast')
 def get_forecast(lat, long):
 	cfg = load_config()
-	res = urlopen(ds_api.format(key = cfg['keys'][0], latitude = lat, longitude = long)).read()
+	key = choose_key( cfg )
+	print("using key %s for request" % key)
+	res = urlopen(ds_api.format(key = key, latitude = lat, longitude = long)).read()
 	daily = json.loads(res)['daily']['data']
 
 	data = []
