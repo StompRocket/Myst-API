@@ -4,8 +4,6 @@ from urllib.request import urlopen
 from urllib.error import HTTPError
 import json
 
-
-ip_api = "http://ipinfo.io/json/127.0.0.1"
 ds_api = "https://api.darksky.net/forecast/{key}/{latitude},{longitude}"
 
 def load_config ( ):
