@@ -37,17 +37,6 @@ def get_forecast(lat, long):
 	key = choose_key( cfg )
 	print("using key %s for request" % key)
 	res = urlopen(ds_api.format(key = key, latitude = lat, longitude = long)).read()
-	daily = json.loads(res)['daily']['data']
-
-	data = []
-	for i, _ in enumerate(daily):
-		data.append(
-			{
-				"summary": daily[i]['summary'],
-				"high": daily[i]['temperatureHigh'],
-				"low": daily[i]['temperatureLow']
-			}
-		)
-	return json.dumps(data)
+	return res
 
 run(host='localhost', port=8080)
