@@ -39,4 +39,14 @@ def get_forecast(lat, long):
 	res = urlopen(ds_api.format(key = key, latitude = lat, longitude = long)).read()
 	return res
 
+@get('/<lat>/<long>/daily')
+def get_forecast(lat, long):
+	cfg = load_config()
+	key = choose_key( cfg )
+	print("using key %s for request" % key)
+	res = urlopen(ds_api.format(key = key, latitude = lat, longitude = long)).read()
+	data = json.loads(res)['daily']['data']
+
+	return json.dumps(data)
+
 run(host='localhost', port=8080)
